@@ -1,0 +1,25 @@
+-- CreateTable
+CREATE TABLE "Curso" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "idhotmart" INTEGER NOT NULL,
+    "ad_id" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "vsl" TEXT,
+    "author" TEXT,
+    "evaluacion" REAL NOT NULL,
+    "date" TEXT NOT NULL,
+    "categoria" TEXT NOT NULL,
+    "formato" TEXT NOT NULL,
+    "productor" TEXT,
+    "idioma" TEXT NOT NULL,
+    "pais" TEXT,
+    "suscripcion" TEXT NOT NULL,
+    "comission" REAL NOT NULL,
+    "cashback" REAL NOT NULL,
+    "descuento" BOOLEAN NOT NULL,
+    "precio_regular" REAL NOT NULL,
+    "precio" REAL NOT NULL
+);

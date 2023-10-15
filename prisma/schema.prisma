@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Curso {
+  id           Int      @id @default(autoincrement())
+  idhotmart    Int
+  ad_id        Int
+  title        String
+  slug         String
+  content      String
+  body         String
+  vsl          String?
+  author       String?
+  evaluacion   Float
+  date         String
+  categoria    String
+  formato      String
+  productor    String?
+  idioma       String
+  pais         String?
+  suscripcion  String
+  comission    Float
+  cashback     Float
+  descuento    Boolean
+  precio_regular Float
+  precio       Float
+}
