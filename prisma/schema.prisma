@@ -13,15 +13,14 @@ datasource db {
 model Curso {
   id           Int      @id @default(autoincrement())
   idhotmart    Int
-  ad_id        Int
+  isAd         Boolean
   title        String
   slug         String
   content      String
   body         String
   vsl          String?
   author       String?
-  evaluacion   Float
-  date         String
+  evaluacion   Float?
   categoria    String
   formato      String
   productor    String?
@@ -29,8 +28,10 @@ model Curso {
   pais         String?
   suscripcion  String
   comission    Float
-  cashback     Float
+  cashback     Float?
   descuento    Boolean
-  precio_regular Float
+  precio_regular Float?
   precio       Float
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
