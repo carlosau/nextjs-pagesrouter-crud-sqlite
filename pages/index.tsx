@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Nunito } from 'next/font/google'
 import { prisma } from '@/db'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
 const nunito = Nunito({ subsets: ['latin'] })
 
@@ -20,66 +21,88 @@ interface HomeProps {
   cursos: Curso[];
 }
 
-const Home: React.FC<HomeProps> = ({ cursos }) => {
+const Home: React.FC<HomeProps> = () => {
  
+  const [cursos, setCursos] = useState<Curso[]>([]);
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Fetch courses from the API route
+    fetch('/api/cursos')
+      .then((response) => response.json())
+      .then((data) => { 
+        setCursos(data)
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch courses', error)
+        setLoading(false)
+      });
+  }, []);
+
   return (
     <main
       className={`bg-slate-100 flex min-h-screen flex-col items-center justify-between p-8 sm:p-20 ${nunito.className}`}
     >
-      <div className='pb-10 text-2xl'><h1>Cursos</h1></div>
-      <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-      {cursos.map((curso) => (
-      <div key={curso.id} className='bg-white rounded-lg shadow-md p-6'>
-      <Link href={`/cursos/${curso.slug}`}>
-      <Image
-        className='rounded-md'
-        src={`/img/img_cursos/img_curso${curso.id}.png`}
-        width={295}
-        height={295}
-        alt='taller-de-artes-cursos'
-      ></Image>
-      <h2 className='text-lg font-bold mb-2'>{curso.title}</h2>
-      <ul className='text-gray-500 text-right text-sm'>
-        <li>
-          <span className='font-bold'>Idioma:</span> {curso.idioma}
-        </li>
-        <li>
-          <span className='font-bold'>Formato:</span> {curso.formato}
-        </li>
-        <li>
-          <span className='font-bold'>Suscripción:</span>{' '}
-          {curso.suscripcion}
-        </li>
-      </ul>
-      {curso.precio_regular ? (
-        <p className='text-right'>
-          <span className='text-red-500 text-xl'>
-            <s>US$ {curso.precio_regular}</s>
-          </span>
-          <span className='text-green-500 text-2xl'>
-            US$ {curso.precio}
-          </span>
-        </p>
-      ) : (
-        <p className='text-green-500 text-2xl text-right'>
-          <span>US$ {curso.precio}</span>
-        </p>
-      )}
-      </Link>
-    </div>
-      ))}
+      <div className='pb-10 text-2xl'>
+        <h1>Cursos</h1>
       </div>
-  
+      {loading ? (
+        <p className='h-[400px]'>Loading...</p>
+      ) : (
+        <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+        {cursos.map((curso) => (
+        <div key={curso.id} className='bg-white rounded-lg shadow-md p-6'>
+        <Link href={`/cursos/${curso.slug}`}>
+        <Image
+          className='rounded-md'
+          src={`/img/img_cursos/img_curso${curso.id}.png`}
+          width={295}
+          height={295}
+          alt='taller-de-artes-cursos'
+        ></Image>
+        <h2 className='text-lg font-bold mb-2'>{curso.title}</h2>
+        <ul className='text-gray-500 text-right text-sm'>
+          <li>
+            <span className='font-bold'>Idioma:</span> {curso.idioma}
+          </li>
+          <li>
+            <span className='font-bold'>Formato:</span> {curso.formato}
+          </li>
+          <li>
+            <span className='font-bold'>Suscripción:</span>{' '}
+            {curso.suscripcion}
+          </li>
+        </ul>
+        {curso.precio_regular ? (
+          <p className='text-right'>
+            <span className='text-red-500 text-xl'>
+              <s>US$ {curso.precio_regular}</s>
+            </span>
+            <span className='text-green-500 text-2xl'>
+              US$ {curso.precio}
+            </span>
+          </p>
+        ) : (
+          <p className='text-green-500 text-2xl text-right'>
+            <span>US$ {curso.precio}</span>
+          </p>
+        )}
+        </Link>
+      </div>
+        ))}
+        </div>
+      )}
     </main>
   )
 }
 
 export default Home;
 
-export async function getServerSideProps() {
+// export async function getServerSideProps() {
   // Create a new curso in the database
   // await prisma.curso.create({ data: {   "idhotmart": 1197438,
-  // "ad_id": 0,
+  // "isAd": false,
   // "title": "Salsa Caleña Nivel Básico",
   // "slug": "salsa-calena-nivel-basico",
   // "content": "En este curso aprenderás todo lo necesario para ser un gran bailador de Salsa, dominar el estilo y los diferentes pasos... ",
@@ -101,11 +124,11 @@ export async function getServerSideProps() {
   // "precio": 40 } });
 
   // Query cursos
-  const cursos = await prisma.curso.findMany();
+//   const cursos = await prisma.curso.findMany();
 
-  return {
-    props: {
-      cursos,
-    },
-  };
-}
+//   return {
+//     props: {
+//       cursos,
+//     },
+//   };
+// }
