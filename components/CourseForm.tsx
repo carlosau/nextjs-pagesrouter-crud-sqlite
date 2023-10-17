@@ -6,18 +6,39 @@ interface Curso {
   title: string;
   slug: string;
   idioma: string;
-  categoria: string,
-  content: string,
-  body: string,
-  idhotmart: number,
+  categoria: string;
+  content: string;
+  body: string;
+  idhotmart: number;
   formato: string;
-  comission: number,
-  isAd: boolean,
-  descuento: boolean,
+  comission: number;
+  isAd: boolean;
+  descuento: boolean;
   suscripcion: string;
   precio_regular: number;
   precio: number;
 }
+
+// Define your categories array
+const categories = [
+  "bailes",
+  "música",
+  "cine",
+  "teatro",
+  "artesanía",
+  "diseño",
+  "cuadro",
+  "decoración",
+  "de coser",
+  "arte corporal",
+  "carpintería",
+  "fotografía",
+  "esculturas",
+  "tejido de punto",
+  "artesanal",
+  "arte culinario",
+  "artes para niños",
+];
 
 interface CourseFormProps {
   initialData?: Curso | null;
@@ -25,41 +46,48 @@ interface CourseFormProps {
   onCancel?: () => void;
 }
 
-const CourseForm: React.FC<CourseFormProps> = ({ initialData, onSubmit, onCancel }) => {
+const CourseForm: React.FC<CourseFormProps> = ({
+  initialData,
+  onSubmit,
+  onCancel,
+}) => {
   const [formData, setFormData] = useState<Prisma.CursoCreateInput>(
-    initialData ? {
-      title: initialData.title,
-      slug: initialData.slug,
-      formato: initialData.formato,
-      categoria: initialData.categoria,
-      idioma: initialData.idioma,
-      suscripcion: initialData.suscripcion,
-      content: initialData.content,
-      body: initialData.body,
-      idhotmart: initialData.idhotmart,
-      precio: initialData.precio,
-      comission: initialData.comission,
-      isAd: initialData.isAd,
-      descuento: initialData.descuento,
-    } : {
-    //properties string types
-    title: "",
-    slug: "",
-    formato: "",
-    categoria: "",
-    idioma: "",
-    suscripcion: "",
-    content: "",
-    body: "",
-    //others types (numbers type)
-    idhotmart: 0,
-    precio: 0,
-    comission: 0,
-    //others types (boolean type)
-    isAd: false,
-    descuento: false,
-    // Add other properties here
-  });
+    initialData
+      ? {
+          title: initialData.title,
+          slug: initialData.slug,
+          formato: initialData.formato,
+          categoria: initialData.categoria,
+          idioma: initialData.idioma,
+          suscripcion: initialData.suscripcion,
+          content: initialData.content,
+          body: initialData.body,
+          idhotmart: initialData.idhotmart,
+          precio: initialData.precio,
+          comission: initialData.comission,
+          isAd: initialData.isAd,
+          descuento: initialData.descuento,
+        }
+      : {
+          //properties string types
+          title: "",
+          slug: "",
+          formato: "",
+          categoria: "",
+          idioma: "",
+          suscripcion: "",
+          content: "",
+          body: "",
+          //others types (numbers type)
+          idhotmart: 0,
+          precio: 0,
+          comission: 0,
+          //others types (boolean type)
+          isAd: false,
+          descuento: false,
+          // Add other properties here
+        }
+  );
 
   const handleInputChangeString = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -104,7 +132,6 @@ const CourseForm: React.FC<CourseFormProps> = ({ initialData, onSubmit, onCancel
         } else {
           console.error("Course creation/update failed");
         }
-
       } else {
         // Create a new course using a POST request
         const response = await fetch("/api/cursos/create", {
@@ -116,22 +143,29 @@ const CourseForm: React.FC<CourseFormProps> = ({ initialData, onSubmit, onCancel
         });
 
         if (response.ok) {
-          const createdCourse = await response.json()
-          onSubmit(createdCourse)
+          const createdCourse = await response.json();
+          onSubmit(createdCourse);
         } else {
-          console.error("Course creation failed")
+          console.error("Course creation failed");
         }
       }
-
     } catch (error) {
       console.error("Course creation failed", error);
     }
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col max-w-lg mx-auto">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-md p-4 sm:p-6 flex flex-col max-w-lg mx-auto"
+    >
       {/* properties string types */}
-    
+
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Title:
         <input
@@ -139,33 +173,50 @@ const CourseForm: React.FC<CourseFormProps> = ({ initialData, onSubmit, onCancel
           name="title"
           value={formData.title}
           onChange={handleInputChangeString}
-          className="rounded-md border p-1"
+          className="ml-2 w-[85%] rounded-md border p-1"
         />
-        </label>
+      </label>
 
+      {/* Dropdown for categoria */}
       <label className="block text-gray-700 text-sm font-bold mb-2">
+        Categoria:
+        <select
+          name="categoria"
+          value={formData.categoria}
+          onChange={handleSelectChange}
+          className="ml-2 rounded-md border p-1"
+        >
+          <option value="">Select a category</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {/* <label className="block text-gray-700 text-sm font-bold mb-2">
         Categoria:
         <input
           type="text"
           name="categoria"
           value={formData.categoria}
           onChange={handleInputChangeString}
-          className="rounded-md border p-1"
+          className="ml-2 rounded-md border p-1"
         />     
-        </label>          
-  
-      
+        </label>           */}
+
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Formato:
         <input
-          type="text"
+          type=""
           name="formato"
           value={formData.formato}
           onChange={handleInputChangeString}
-          className="rounded-md border p-1"
+          className="ml-2 rounded-md border p-1"
         />
-        </label>
-      
+      </label>
+
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Idioma:
         <input
@@ -252,66 +303,65 @@ const CourseForm: React.FC<CourseFormProps> = ({ initialData, onSubmit, onCancel
       {/* other types (boolean type) */}
       <label className="block text-gray-700 text-sm font-bold">
         Is Advertisement?
-        </label>
-        <div>
-          <input
-            type="radio"
-            name="isAd"
-            value="true"
-            checked={formData.isAd === true}
-            onChange={handleRadioChange}
-          />
-          <span>Yes</span>
-        </div>
-        <div className="mb-2">
-          <input
-            type="radio"
-            name="isAd"
-            value="false"
-            checked={formData.isAd === false}
-            onChange={handleRadioChange}
-          />
-          <span>No</span>
-        </div>
-     
+      </label>
+      <div>
+        <input
+          type="radio"
+          name="isAd"
+          value="true"
+          checked={formData.isAd === true}
+          onChange={handleRadioChange}
+        />
+        <span>Yes</span>
+      </div>
+      <div className="mb-2">
+        <input
+          type="radio"
+          name="isAd"
+          value="false"
+          checked={formData.isAd === false}
+          onChange={handleRadioChange}
+        />
+        <span>No</span>
+      </div>
 
       <label className="block text-gray-700 text-sm font-bold">
         Apply Discount?
-        </label>
-        <div>
-          <input
-            type="radio"
-            name="descuento"
-            value="true"
-            checked={formData.descuento === true}
-            onChange={handleRadioChange}
-          />
-          <span>Yes</span>
-        </div>
-        <div className="mb-2">
-          <input
-            type="radio"
-            name="descuento"
-            value="false"
-            checked={formData.descuento === false}
-            onChange={handleRadioChange}
-          />
-          <span>No</span>
-        </div>
+      </label>
+      <div>
+        <input
+          type="radio"
+          name="descuento"
+          value="true"
+          checked={formData.descuento === true}
+          onChange={handleRadioChange}
+        />
+        <span>Yes</span>
+      </div>
+      <div className="mb-2">
+        <input
+          type="radio"
+          name="descuento"
+          value="false"
+          checked={formData.descuento === false}
+          onChange={handleRadioChange}
+        />
+        <span>No</span>
+      </div>
 
       <button
         type="submit"
         className="mt-6 border-2 border-black text-black font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white hover:border-0"
       >
-      {initialData ? 'Update' : 'Create'}
+        {initialData ? "Update" : "Create"}
       </button>
       <button
-                type="button"
-                onClick={onCancel}
-                className="mt-2 border-2 border-red-500 text-red-500 font-bold py-2 px-4 rounded hover:bg-red-500 hover:text-white hover:border-0"
-            >
-                Cancel
-            </button>
+        type="button"
+        onClick={onCancel}
+        className="mt-2 border-2 border-red-500 text-red-500 font-bold py-2 px-4 rounded hover:bg-red-500 hover:text-white hover:border-0"
+      >
+        Cancel
+      </button>
     </form>
   );
 };
