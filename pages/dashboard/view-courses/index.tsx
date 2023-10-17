@@ -47,6 +47,7 @@ const ViewCourses = () => {
   const [editingCourse, setEditingCourse] = useState<Curso | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<string>(""); // State for selected ordering option
 
   useEffect(() => {
     // Fetch courses from the API route
@@ -142,6 +143,25 @@ const ViewCourses = () => {
     setSelectedCategory(category === selectedCategory ? null : category);
   };
 
+  //Event handler for handling the select change
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOrder(e.target.value);
+  };
+
+  //Function to order the course list based on the selected ordering option
+  const orderedCourses = () => {
+    switch (selectedOrder) {
+      case "highestPrice":
+        return [...filteredCourses].sort((a, b) => b.precio - a.precio);
+      case "lowestPrice":
+        return [...filteredCourses].sort((a, b) => a.precio - b.precio);
+      case "isAd":
+        return [...filteredCourses].sort((a, b) => (b.isAd ? -1 : 1));
+      default:
+        return filteredCourses;
+    }
+  };
+
   return (
     <main className="bg-yellow-100 min-h-screen">
       <div className="p-8 sm:p-10">
@@ -162,33 +182,47 @@ const ViewCourses = () => {
               {category}
             </button>
           ))}
-        </div> 
+        </div>
 
         {/* Search bar */}
-        <div className="text-center">
-        <input
-          type="text"
-          placeholder="Search courses..."
-          value={searchQuery}
-          onChange={handleSearchInputChange}
-          className="rounded-md border p-2 mb-4"
-        />
+        <div className="flex items-center align-center justify-between text-center">
+          <input
+            type="text"
+            placeholder="Search courses..."
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            className="rounded-md border p-2 mb-4"
+          />
+          {/* Dropdown for ordering */}
+          <select
+            value={selectedOrder}
+            onChange={handleSelectChange}
+            className="rounded-md border p-2"
+          >
+            <option value="">Order by...</option>
+            <option value="highestPrice">Highest Price</option>
+            <option value="lowestPrice">Lowest Price</option>
+            <option value="isAd">Is Ad</option>
+          </select>
         </div>
 
         {loading ? (
           <p>Loading...</p>
         ) : (
           <ul className="bg-white rounded-lg shadow-lg p-6">
-            {filteredCourses.map((curso) => (
+            {orderedCourses().map((curso) => (
               <li
                 key={curso.id}
                 className="flex items-center justify-between hover:bg-slate-100 py-2 hover:rounded-md hover:p-2"
               >
                 <div className="text-sm font-bold">
-                <p>{curso.title}</p>
-                <p className="text-green-500"><span>$</span>{curso.precio}</p>
+                  <p>{curso.title}</p>
+                  <p className="text-green-500">
+                    <span>$</span>
+                    {curso.precio}
+                  </p>
                 </div>
-                
+
                 <div className="space-x-2 space-y-2">
                   <button
                     className="rounded-md p-1 bg-blue-400 hover:bg-blue-500 text-sm"
