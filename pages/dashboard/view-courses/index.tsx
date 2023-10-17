@@ -24,6 +24,8 @@ const ViewCourses = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingCourse, setEditingCourse] = useState<Curso | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
 
   useEffect(() => {
     // Fetch courses from the API route
@@ -96,15 +98,35 @@ const ViewCourses = () => {
     }
 };
 
+  // Function to handle the search input change
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Filter courses based on the search query
+  const filteredCourses = cursos.filter((curso) => {
+    return curso.title.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
+
   return (
     <main className='bg-yellow-100 min-h-screen'>
     <div className='p-8 sm:p-10'>
       <h1 className='text-center text-lg p-4 pb-8'>All Courses</h1>
+      
+      {/* Search bar */}
+      <input
+          type="text"
+          placeholder="Search courses..."
+          value={searchQuery}
+          onChange={handleSearchInputChange}
+          className="rounded-md border p-2 mb-4"
+        />
       {loading ? (
         <p>Loading...</p>
       ) : (
         <ul className='bg-white rounded-lg shadow-lg p-6'>
-        {cursos.map((curso) => (
+        {filteredCourses.map((curso) => (
           <li key={curso.id} className='flex items-center justify-between hover:bg-slate-100'>
             {curso.title}
             <div className='space-x-2 space-y-2'>
