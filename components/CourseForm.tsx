@@ -1,12 +1,47 @@
 import { useState } from "react";
 import { Prisma } from "@prisma/client";
 
-interface CourseFormProps {
-  onSubmit: (data: Prisma.CursoCreateInput) => void;
+interface Curso {
+  id: number;
+  title: string;
+  slug: string;
+  idioma: string;
+  categoria: string,
+  content: string,
+  body: string,
+  idhotmart: number,
+  formato: string;
+  comission: number,
+  isAd: boolean,
+  descuento: boolean,
+  suscripcion: string;
+  precio_regular: number;
+  precio: number;
 }
 
-const CourseForm: React.FC<CourseFormProps> = ({ onSubmit }) => {
-  const [formData, setFormData] = useState<Prisma.CursoCreateInput>({
+interface CourseFormProps {
+  initialData?: Curso | null;
+  onSubmit: (data: Prisma.CursoCreateInput) => void;
+  onCancel?: () => void;
+}
+
+const CourseForm: React.FC<CourseFormProps> = ({ initialData, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState<Prisma.CursoCreateInput>(
+    initialData ? {
+      title: initialData.title,
+      slug: initialData.slug,
+      formato: initialData.formato,
+      categoria: initialData.categoria,
+      idioma: initialData.idioma,
+      suscripcion: initialData.suscripcion,
+      content: initialData.content,
+      body: initialData.body,
+      idhotmart: initialData.idhotmart,
+      precio: initialData.precio,
+      comission: initialData.comission,
+      isAd: initialData.isAd,
+      descuento: initialData.descuento,
+    } : {
     //properties string types
     title: "",
     slug: "",
@@ -53,20 +88,41 @@ const CourseForm: React.FC<CourseFormProps> = ({ onSubmit }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/cursos/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      })
-    
-      if (response.ok) {
-        const createdCourse = await response.json()
-        onSubmit(createdCourse)
+      if (initialData) {
+        // Update an existing course using a PUT request
+        const response = await fetch(`/api/cursos/update/${initialData.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          const updatedCourse = await response.json();
+          onSubmit(updatedCourse);
+        } else {
+          console.error("Course creation/update failed");
+        }
+
       } else {
-        console.error("Course creation failed")
+        // Create a new course using a POST request
+        const response = await fetch("/api/cursos/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          const createdCourse = await response.json()
+          onSubmit(createdCourse)
+        } else {
+          console.error("Course creation failed")
+        }
       }
+
     } catch (error) {
       console.error("Course creation failed", error);
     }
@@ -247,8 +303,15 @@ const CourseForm: React.FC<CourseFormProps> = ({ onSubmit }) => {
         type="submit"
         className="mt-6 border-2 border-black text-black font-bold py-2 px-4 rounded hover:bg-blue-500 hover:text-white hover:border-0"
       >
-        Criar
+      {initialData ? 'Update' : 'Create'}
       </button>
+      <button
+                type="button"
+                onClick={onCancel}
+                className="mt-2 border-2 border-red-500 text-red-500 font-bold py-2 px-4 rounded hover:bg-red-500 hover:text-white hover:border-0"
+            >
+                Cancel
+            </button>
     </form>
   );
 };

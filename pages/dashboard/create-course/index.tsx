@@ -2,7 +2,7 @@ import CourseForm from "@/components/CourseForm";
 
 const CreateCoursePage = () => {
     const handleResult = () => {
-        console.log('OK OK OK OK OK')
+        console.log('Course created successfully')
     } 
 
   return (
