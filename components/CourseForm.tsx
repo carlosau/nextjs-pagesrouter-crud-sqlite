@@ -19,7 +19,7 @@ interface Curso {
   precio: number;
 }
 
-// Define your categories array
+// Define dropdown list items
 const categories = [
   "bailes",
   "música",
@@ -40,6 +40,12 @@ const categories = [
   "artes para niños",
 ];
 
+const formatos = ["video aula", "e-book"];
+
+const idiomas = ["Español", "Inglés"];
+
+const suscripciones = ["pago unico", "mensualidad"];
+
 interface CourseFormProps {
   initialData?: Curso | null;
   onSubmit: (data: Prisma.CursoCreateInput) => void;
@@ -56,10 +62,10 @@ const CourseForm: React.FC<CourseFormProps> = ({
       ? {
           title: initialData.title,
           slug: initialData.slug,
-          formato: initialData.formato,
+          formato: "video aula",
           categoria: initialData.categoria,
-          idioma: initialData.idioma,
-          suscripcion: initialData.suscripcion,
+          idioma: "Español",
+          suscripcion: "pago unico",
           content: initialData.content,
           body: initialData.body,
           idhotmart: initialData.idhotmart,
@@ -72,10 +78,10 @@ const CourseForm: React.FC<CourseFormProps> = ({
           //properties string types
           title: "",
           slug: "",
-          formato: "",
+          formato: "video aula",
           categoria: "",
-          idioma: "",
-          suscripcion: "",
+          idioma: "Español",
+          suscripcion: "pago unico",
           content: "",
           body: "",
           //others types (numbers type)
@@ -186,7 +192,6 @@ const CourseForm: React.FC<CourseFormProps> = ({
           onChange={handleSelectChange}
           className="ml-2 rounded-md border p-1"
         >
-          <option value="">Select a category</option>
           {categories.map((category) => (
             <option key={category} value={category}>
               {category}
@@ -195,66 +200,78 @@ const CourseForm: React.FC<CourseFormProps> = ({
         </select>
       </label>
 
-      {/* <label className="block text-gray-700 text-sm font-bold mb-2">
-        Categoria:
-        <input
-          type="text"
-          name="categoria"
-          value={formData.categoria}
-          onChange={handleInputChangeString}
-          className="ml-2 rounded-md border p-1"
-        />     
-        </label>           */}
-
+      {/* Dropdown for formato */}
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Formato:
-        <input
-          type=""
+        <select
           name="formato"
           value={formData.formato}
-          onChange={handleInputChangeString}
+          onChange={handleSelectChange}
           className="ml-2 rounded-md border p-1"
-        />
+        >
+          {formatos.map((format) => (
+            <option key={format} value={format}>
+              {format}
+            </option>
+          ))}
+        </select>
       </label>
 
+      {/* Dropdown for idioma */}
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Idioma:
-        <input
-          type="text"
+        <select
           name="idioma"
           value={formData.idioma}
-          onChange={handleInputChangeString}
-          className="rounded-md border p-1"
-        />
+          onChange={handleSelectChange}
+          className="ml-2 rounded-md border p-1"
+        >
+          {idiomas.map((idiom) => (
+            <option key={idiom} value={idiom}>
+              {idiom}
+            </option>
+          ))}
+        </select>
       </label>
+
+      {/* Dropdown for suscripcion */}
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Suscripcion:
-        <input
-          type="text"
+        <select
           name="suscripcion"
           value={formData.suscripcion}
-          onChange={handleInputChangeString}
-          className="rounded-md border p-1"
-        />
+          onChange={handleSelectChange}
+          className="ml-2 rounded-md border p-1"
+        >
+          {suscripciones.map((suscripc) => (
+            <option key={suscripc} value={suscripc}>
+              {suscripc}
+            </option>
+          ))}
+        </select>
       </label>
+
+      {/* Content input */}
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Content:
-        <input
-          type="text"
+        <textarea
+          rows={4}
           name="content"
           value={formData.content}
           onChange={handleInputChangeString}
-          className="rounded-md border p-1"
+          className="w-full rounded-md border p-1"
         />
       </label>
+
+      {/* Body input */}
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Body:
-        <input
-          type="text"
+        <textarea
+          rows={4}
           name="body"
           value={formData.body}
           onChange={handleInputChangeString}
-          className="rounded-md border p-1"
+          className="w-full rounded-md border p-1"
         />
       </label>
       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -264,7 +281,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
           name="slug"
           value={formData.slug}
           onChange={handleInputChangeString}
-          className="rounded-md border p-1"
+          className="ml-2 rounded-md border p-1"
         />
       </label>
 
@@ -276,7 +293,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
           name="idhotmart"
           value={formData.idhotmart}
           onChange={handleInputChangeNumber}
-          className="rounded-md border p-1"
+          className="ml-2 rounded-md border p-1"
         />
       </label>
       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -286,7 +303,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
           name="precio"
           value={formData.precio}
           onChange={handleInputChangeNumber}
-          className="rounded-md border p-1"
+          className="ml-2 rounded-md border p-1"
         />
       </label>
       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -296,7 +313,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
           name="comission"
           value={formData.comission}
           onChange={handleInputChangeNumber}
-          className="rounded-md border p-1"
+          className="ml-2 rounded-md border p-1"
         />
       </label>
 
@@ -355,13 +372,14 @@ const CourseForm: React.FC<CourseFormProps> = ({
       >
         {initialData ? "Update" : "Create"}
       </button>
+      {initialData ? 
       <button
         type="button"
         onClick={onCancel}
         className="mt-2 border-2 border-red-500 text-red-500 font-bold py-2 px-4 rounded hover:bg-red-500 hover:text-white hover:border-0"
       >
         Cancel
-      </button>
+      </button> : ""}
     </form>
   );
 };

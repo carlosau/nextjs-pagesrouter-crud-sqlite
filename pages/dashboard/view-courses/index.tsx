@@ -182,9 +182,13 @@ const ViewCourses = () => {
             {filteredCourses.map((curso) => (
               <li
                 key={curso.id}
-                className="flex items-center justify-between hover:bg-slate-100"
+                className="flex items-center justify-between hover:bg-slate-100 py-2 hover:rounded-md hover:p-2"
               >
-                {curso.title}
+                <div className="text-sm font-bold">
+                <p>{curso.title}</p>
+                <p className="text-green-500"><span>$</span>{curso.precio}</p>
+                </div>
+                
                 <div className="space-x-2 space-y-2">
                   <button
                     className="rounded-md p-1 bg-blue-400 hover:bg-blue-500 text-sm"
