@@ -18,6 +18,8 @@ interface Curso {
   suscripcion: string;
   precio_regular: number;
   precio: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Define the list of categories
@@ -156,7 +158,11 @@ const ViewCourses = () => {
       case "lowestPrice":
         return [...filteredCourses].sort((a, b) => a.precio - b.precio);
       case "isAd":
-        return [...filteredCourses].sort((a, b) => (b.isAd ? -1 : 1));
+        return [...filteredCourses].sort((a, b) => (b.isAd ? 1 : -1));
+        case "newest":
+          return [...filteredCourses].sort((a, b) => { return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime() });
+        // case "updated":
+        //   return [...filteredCourses].sort((a, b) => { return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime() });
       default:
         return filteredCourses;
     }
@@ -200,8 +206,10 @@ const ViewCourses = () => {
             className="rounded-md border p-2"
           >
             <option value="">Order by...</option>
-            <option value="highestPrice">Highest Price</option>
+            <option value="newest">Newest</option>
+            {/* <option value="updated">Updated</option> */}
             <option value="lowestPrice">Lowest Price</option>
+            <option value="highestPrice">Highest Price</option>
             <option value="isAd">Is Ad</option>
           </select>
         </div>
