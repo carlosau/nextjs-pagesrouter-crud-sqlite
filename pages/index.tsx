@@ -116,7 +116,7 @@ const Home: React.FC<HomeProps> = () => {
 
   return (
     <main
-      className={`bg-slate-100 flex min-h-screen flex-col items-center justify-between p-8 sm:p-20 ${nunito.className}`}
+      className={`bg-gray-50 flex min-h-screen flex-col items-center justify-between p-8 sm:p-20 ${nunito.className}`}
     >
     
     <div className="w-full bg-white fixed sm:px-24 p-8 sm:p-4 top-0">
@@ -156,10 +156,10 @@ const Home: React.FC<HomeProps> = () => {
         <div className="">
         <input
           type="text"
-          placeholder="Search courses..."
+          placeholder="¿Qué quieres aprender hoy?"
           value={searchQuery}
           onChange={handleSearchInputChange}
-          className="w-full sm:w-[400px] rounded-md border p-2 mb-4"
+          className="w-full sm:w-[400px] rounded-md border border-2 p-2 mb-4"
         />
         </div>
         {/* Dropdown for ordering */}
@@ -169,11 +169,11 @@ const Home: React.FC<HomeProps> = () => {
           onChange={handleSelectChange}
           className="w-[150px] float-right bg-white rounded-md border p-1 text-sm"
         >
-          <option value="">Order by...</option>
-          <option value="newest">Newest</option>
+          <option value="">Ordenar por</option>
+          <option value="newest">Más recientes</option>
           {/* <option value="updated">Updated</option> */}
-          <option value="lowestPrice">Lowest Price</option>
-          <option value="highestPrice">Highest Price</option>
+          <option value="lowestPrice">Precio más bajo</option>
+          <option value="highestPrice">Precio más alto</option>
           <option value="isAd">Is Ad</option>
         </select>
         </div>

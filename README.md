@@ -1,3 +1,3 @@
 ## nextjs-pagesrouter-crud-sqlite
 
-nextjs typescript tailwindcss pagesrouter prisma sqlite
+ITS IS THE STRUCTURE FOR THE FIRST VERSION OF THE REP "tallerdeartes-website-v2-api-dashboard"
